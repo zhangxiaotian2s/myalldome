@@ -1,0 +1,8 @@
+#cut_content{ width: 100%; max-width: 640px; position:fixed;  top:30px; background: #ccc;}
+#cut_footer li{width: 49.5%; border-top:#FFFFFF  solid 1px ; float:left; height: 32px; line-height: 32px; text-align: center; background: #F6F6F6;}
+#cancel{ border-right:#FFFFFF solid 1% ;}
+
+
+.from_bottom_in{
+	animation:  0.5s ;
+}
