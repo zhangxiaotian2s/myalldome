@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="HandheldFriendly" content="true" />
+		<meta name="MobileOptimized" content="320" />
+		<title></title>
+		<link rel="stylesheet" href="../public.css" />
+		<style>
+			.pa {
+				position: absolute;
+			}
+			
+			.imgbox {
+				width: 100%;
+				max-width: 640px;
+				margin: auto;
+				background: #000000;
+				position: relative;
+				overflow: hidden;
+			}
+			
+			#loading {
+				display: none;
+				width: 60px;
+				height: 60px;
+				top: 45%;
+				left: 50%;
+				margin-left: -30px;
+				position: absolute;
+				opacity: 0.5;
+				border-radius: 10px;
+				overflow: hidden;
+			}
+			#p_text{ position: absolute; top: 0px; color: #FFFFFF; z-index: 10000;}
+		</style>
+	</head>
+
+	<body>
+		<div class="imgbox pr" id="imgbox">
+			<div id="loading"><img src="images/loading.gif" class="img-responsive"></div>
+		</div>
+		<p class="pa" id="p_text">11</p>
+	</body>
+	<script type="text/javascript" src="js/touch.js"></script>
+	<script>
+		function Album(imgarr) {
+			this.box = document.getElementById('imgbox')
+			this.imgarr = imgarr
+			this.imgnum = this.imgarr.length;
+			this.loadimg = document.getElementById('loading')
+			this.ptext=document.getElementById('p_text')
+		}
+		//初始化一些内容
+		Album.prototype.init = function() {
+				this.w_h = window.screen.height;
+				this.w_w = window.screen.width > 640 ? 640 : window.screen.width;
+				this.box.style.height = this.w_h + 'px'
+				this.insertImg(0)
+			}
+			//插入 一张图片 
+		Album.prototype.insertImg = function(nowi) {
+				var self = this
+				self.warting(true)
+				var _img = new Image()
+				_img.src = this.imgarr[nowi]
+				_img.setAttribute('class', 'img-responsive pa')
+//				_img.style.webkitTransition= 'all ease 0.3s';
+//					_img.style.webkitTransform='scale(0.5,0.5)'
+				_img.onload = function() {
+					self.setImgPosition(_img)
+					self.box.appendChild(_img)
+//					_img.style.webkitTransform='scale(1,1)'
+					self.warting(false)
+				}
+				self.dragTapFn(_img,nowi)
+			}
+			//控制设置插入图片的位置
+		Album.prototype.setImgPosition = function(img, w, h) {
+				var scalew = this.w_w / img.width
+				var imgh = img.height * scalew
+					//当高度大于屏幕高度
+				if (imgh > this.w_h) {
+					var scaleh = this.w_h / img.height
+					var imgw = img.width * scaleh
+					img.style.top = "0px"
+					img.style.height = this.w_h + 'px'
+					img.style.left = '50%'
+					img.style.marginLeft = -imgw / 2 + 'px'
+				} else {
+					img.style.top = "50%"
+					img.style.marginTop = -imgh / 2 + 'px'
+				}
+			}
+			//loading gif 控制方法
+		Album.prototype.warting = function(bool) {
+			if (bool) {
+				this.loadimg.style.display = 'block'
+			} else {
+				this.loadimg.style.display = 'none'
+			}
+		}
+		Album.prototype.dragTapFn = function(img, nexti) {
+			var self = this
+			img.style.webkitTransition = 'all ease 0.3s';
+			var dx, dy
+			touch.on(img, 'drag', function(ev) {
+				 dx = ev.x;
+				 dy = ev.y;
+				var offx =0+ ev.x + "px";
+				var offy =0+ ev.y + "px";
+				self.ptext.innerText=offx
+				this.style.webkitTransform = "translateX(" + offx + ")";
+				
+			});
+			touch.on(img, 'dragend', function(ev) {
+				if (dx < 0) {
+					console.log(dx)
+					if (dx < -200) {
+						this.style.webkitTransform = 'translateX(-' + self.w_w + 'px)';
+//						self.insertImg(nexti+1)
+					} else {
+						this.style.webkitTransform = 'translateX(0px)';
+					}
+				} else {
+					
+				}
+			});
+			//			img.addEventListener('drag', function(ev) {
+			//				console.log(ev.x)
+			//				this.style.webkitTransform = 'translateX(-' + ev.x + 'px)';
+			//			}, false)
+			//			img.addEventListener('webkitTransitionEnd', function() {
+			//			}, false)
+		}
+		var imgarr = ['images/124 (1).jpg', 'images/124 (2).jpg', 'images/124 (3).jpg']
+		var album = new Album(imgarr)
+		album.init()
+	</script>
+
+</html>
