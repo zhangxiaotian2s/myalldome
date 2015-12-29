@@ -1,9 +1,264 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
 	<head>
-		<meta charset="utf-8">
-		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="站长,网页特效,网页特效代码,js特效,js脚本,脚本,广告代码,zzjs,zzjs.net,www.zzjs.net,站长特效 网" />
+		<meta name="description" content="www.zzjs.net,站长特效网，站长必备js特效及广告代码。以质量为核心，以实用为目的,打造一流网页特效站" />
+		<title>站长特效 iPhone手机图片查看器 站长特效网</title>
+		<style type="text/css">
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			
+			li {
+				list-style: none;
+			}
+			
+			body {
+				background: #333;
+			}
+			
+			#iphone_zzjs_net {
+				width: 900px;
+				height: 600px;
+				background: url(/img/20110408wwwzzjsnet_bg.jpg);
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin: -300px 0 0 -450px;
+			}
+			
+			#wrap_zzjs {
+				width: 238px;
+				height: 360px;
+				position: absolute;
+				top: 121px;
+				left: 326px;
+				overflow: hidden;
+			}
+			
+			#iphone_zzjs_net ul {
+				width: 960px;
+				height: 361px;
+				cursor: pointer;
+				position: absolute;
+				top: 0px;
+				left: 0px;
+			}
+			
+			#iphone_zzjs_net li {
+				float: left;
+				width: 240px;
+				height: 360px;
+				overflow: hidden;
+			}
+		</style>
+		<script type="text/javascript">
+			function MiaovperfectDragSimple(vElement, fnOnDragStart, fnOnDraging, fnOnDragEnd) {
+				var oElementDrag = null;
+				//欢迎来到站长j特效网，我们的网址是www.zzjs.net，很好记，zz站长，js就是js特效，.net打造靓站，还有许多广告代码下载。
+				if (typeof vElement == 'string') {
+					oElementDrag = document.getElementById(vElement);
+				} else if (typeof vElement == 'object') {
+					oElementDrag = vElement;
+				}
+				this.creator = MiaovPerfectDrag;
+				this.creator(
+					oElementDrag,
+					function() {
+						return {
+							x: oElementDrag.offsetLeft,
+							y: oElementDrag.offsetTop
+						};
+					},
+					function(x, y) {
+						oElementDrag.style.left = x + 'px';
+						oElementDrag.style.top = y + 'px';
+						if (fnOnDraging) {
+							fnOnDraging(x, y);
+						}
+					},
+					fnOnDragStart, fnOnDragEnd
+				);
+				delete this.creator;
+			}
+			//欢迎来到站长q特效网，我们的网址是www.zzjs.net，很好记，zz站长，js就是js特效，.net打造靓站，还有许多广告代码下载。
+			MiaovperfectDragSimple.prototype = MiaovPerfectDrag.prototype;
+
+			function MiaovPerfectDrag(oElementDrag, fnGetPos, fnDoMove, fnOnDragStart, fnOnDragEnd) {
+				var obj = this;
+				this.oElement = oElementDrag;
+				this.oElement.style.overflow = 'hidden';
+				this.fnGetPos = fnGetPos;
+				this.fnDoMove = fnDoMove;
+				this.fnOnDragStart = fnOnDragStart;
+				this.fnOnDragEnd = fnOnDragEnd;
+				this.__oStartOffset__ = {
+					x: 0,
+					y: 0
+				};
+				this.oElement.onmousedown = function(ev) {
+					obj.startDrag(window.event || ev);
+				};
+				this.fnOnMouseUp = function(ev) {
+					obj.stopDrag(window.event || ev);
+				};
+				this.fnOnMouseMove = function(ev) {
+					obj.doDrag(window.event || ev);
+				};
+			}
+			//欢迎来到站长h特效网，我们的网址是www.zzjs.net，很好记，zz站长，js就是js特效，.net打造靓站，还有许多广告代码下载。
+			MiaovPerfectDrag.prototype.enable = function() {
+				var obj = this;
+				this.oElement.onmousedown = function(ev) {
+					obj.startDrag(window.event || ev);
+				};
+			};
+			//欢迎来到站长特效网，我们的网址是www .zzjs.net，很好记，zz站长，js就是js特效，.net打造靓站，还有许多广告代码下载。
+			MiaovPerfectDrag.prototype.disable = function() {
+				this.oElement.onmousedown = null;
+			};
+			MiaovPerfectDrag.prototype.startDrag = function(oEvent) {
+				var oPos = this.fnGetPos();
+				var x = oEvent.clientX;
+				var y = oEvent.clientY;
+				if (this.fnOnDragStart) {
+					this.fnOnDragStart();
+				}
+				//欢迎来到站q长特效网，我们的网址是www.zzjs.net，很好记，zz站长，js就是js特效，.net打造靓站，还有许多广告代码下载。
+				this.__oStartOffset__.x = x - oPos.x;
+				this.__oStartOffset__.y = y - oPos.y;
+				if (this.oElement.setCapture) {
+					this.oElement.setCapture();
+					this.oElement.onmouseup = this.fnOnMouseUp;
+					this.oElement.onmousemove = this.fnOnMouseMove;
+				} else {
+					document.addEventListener("mouseup", this.fnOnMouseUp, true);
+					document.addEventListener("mousemove", this.fnOnMouseMove, true);
+					window.captureEvents(Event.MOUSEMOVE | Event.MOUSEUP);
+				}
+			};
+			MiaovPerfectDrag.prototype.stopDrag = function(oEvent) {
+				if (this.oElement.releaseCapture) {
+					this.oElement.releaseCapture();
+					this.oElement.onmouseup = null;
+					this.oElement.onmousemove = null;
+				} else {
+					document.removeEventListener("mouseup", this.fnOnMouseUp, true);
+					document.removeEventListener("mousemove", this.fnOnMouseMove, true);
+					window.releaseEvents(Event.MOUSE_MOVE | Event.MOUSE_UP);
+				}
+				//欢迎来到站长c特效网，我们的网址是www.zzjs.net，很好记，zz站长，js就是js特效，.net打造靓站，还有许多广告代码下载。
+				if (this.fnOnDragEnd) {
+					if (oEvent.clientX == this.__oStartOffset__.x && oEvent.clientY == this.__oStartOffset__.y) {
+						this.fnOnDragEnd(false);
+					} else {
+						this.fnOnDragEnd(true);
+					}
+				}
+			};
+			//欢迎来到站长特效网，我们的q网址是www.zzjs.net，很好记，zz站长，js就是js特效，.net打造靓站，还有许多广告代码下载。
+			MiaovPerfectDrag.prototype.doDrag = function(oEvent) {
+				var x = oEvent.clientX;
+				var y = oEvent.clientY;
+				this.fnDoMove(x - this.__oStartOffset__.x, y - this.__oStartOffset__.y);
+			};
+		</script>
+		<script type="text/javascript">
+			var oTimer = null;
+			var iSpeed = 0;
+			var iNow = 0;
+			window.onload = function() {
+				var oUl = document.getElementById('wrap_zzjs').getElementsByTagName('ul')[0];
+				//欢迎来到站长x特效网，我们的网址是www.zzjs.net，很好记，zz站长，js就是js特效，.net打造靓站，还有许多广告代码下载。
+				var iStartX;
+				//欢迎来到站长特效z网，我们的网址是www.zzjs.net，很好记，zz站长，js就是js特效，.net打造靓站，还有许多广告代码下载。
+				new MiaovPerfectDrag
+					(
+						oUl,
+						function() {
+							return {
+								x: oUl.offsetLeft,
+								y: oUl.offsetTop
+							};
+						},
+						function(x, y) {
+							oUl.style.left = x + 'px';
+							//oUl.style.top=y+'px';
+						},
+						function() {
+							stopMove();
+							iStartX = oUl.offsetLeft;
+						},
+						function() //当拖拽结束
+						{
+							if (Math.abs(oUl.offsetLeft - iStartX) >= 50) {
+								if (oUl.offsetLeft > iStartX) {
+									iNow--;
+									if (iNow < 0) {
+										iNow = 0;
+									}
+								} else {
+									iNow++;
+									if (iNow >= oUl.getElementsByTagName('li').length) {
+										iNow = oUl.getElementsByTagName('li').length - 1;
+									}
+								}
+							}
+							startMove(-iNow * oUl.getElementsByTagName('li')[0].offsetWidth);
+						}
+					);
+			};
+
+			function startMove(iTarget) {
+				if (oTimer) {
+					clearInterval(oTimer);
+				}
+				//欢迎来到站长特z效网，我们的网址是www.zzjs.net，很好记，zz站长，js就是js特效，.net打造靓站，还有许多广告代码下载。
+				oTimer = setInterval("doMove(" + iTarget + ")", 30);
+			}
+
+			function doMove(iTarget) {
+				var oUl = document.getElementById('wrap_zzjs').getElementsByTagName('ul')[0];
+				var l = oUl.offsetLeft;
+				iSpeed += (iTarget - oUl.offsetLeft) / 5;
+				iSpeed *= 0.7;
+				//欢迎来到站长z特效网，我们的网址是www.zzjs.net，很好记，zz站长，js就是js特效，.net打造靓站，还有许多广告代码下载。
+				l += iSpeed;
+				if (Math.abs(iTarget - oUl.offsetLeft) < 1 && Math.abs(iSpeed) < 1) {
+					clearInterval(oTimer);
+					oTimer = null;
+					l = iTarget;
+				}
+				//欢迎来到站z长特效网，我们的网址是www.zzjs.net，很好记，zz站长，js就是js特效，.net打造靓站，还有许多广告代码下载。
+				oUl.style.left = l + 'px';
+			}
+
+			function stopMove() {
+				if (oTimer) {
+					clearInterval(oTimer);
+				}
+			} //欢迎来到站长特效网，我们的网址是www.zzjs.net，很好记，zz站长，js就是js特效，.net打造靓站，还有许多广告代码下载。
+		</script>
 	</head>
+
 	<body>
+		<a href="http://www.zzjs.net/">站长特效网</a>，以质量为核心，以实用为目的，打造一流网页特效站！zzjs.net，站长js特效。
+		<hr>
+		<!--欢迎来到站长特效网，我们网站收集大量高质量js特效，提供许多广告代码下载，网址：www.zzjs.net，zzjs@msn.com,用.net打造靓站-->
+		<script type="text/javascript" src="http://www.zzjs.net/ad/tc.js"></script>
+		<div id="iphone_zzjs_net">
+			<div id="wrap_zzjs">
+				<ul>
+					<li style="background:url(/img/20110408wwwzzjsnet_pic1.png);" title="站长特效"></li>
+					<li style="background:url(/img/20110408wwwzzjsnet_pic2.png);" title="站长特效"></li>
+					<li style="background:url(/img/20110408wwwzzjsnet_pic3.png);" title="站长特效"></li>
+					<li style="background:url(/img/20110408wwwzzjsnet_pic4.png);" title="站长特效"></li>
+				</ul>
+			</div>
+		</div>
 	</body>
+
 </html>
