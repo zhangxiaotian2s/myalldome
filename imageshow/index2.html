@@ -11,7 +11,9 @@
 		<title></title>
 		<link rel="stylesheet" href="../public.css" />
 		<style>
-			.wrap {}
+			.wrap {
+				overflow: hidden;
+			}
 			
 			.album {
 				width: 100%;
@@ -22,7 +24,52 @@
 			
 			.album ul li {
 				float: left;
+				position: relative;
+				background: url(images/loading.gif) no-repeat center;
 				/*background-size: 100%;*/
+			}
+			
+			.album ul li img {
+				position: absolute;
+			}
+			
+			.header_number {
+				width: 100%;
+				max-width: 640px;
+				height: 50px;
+				line-height: 50px;
+				text-align: center;
+				color: #FFFFFF;
+				font-size: 16px;
+				border-bottom: #F6F6F6 solid 1px;
+				position: absolute;
+				top: 0px;
+				overflow: hidden;
+				background: #000000;
+				opacity: .7;
+				z-index: 10000;
+			}
+			
+			.bottom_text {
+				position: absolute;
+				bottom: 0px;
+				left: 0px;
+				color: #FFFFFF;
+				padding: 10px 0px;
+				width: 100%;
+				background: #000000;
+				opacity: .7;
+				z-index: 10000;
+			}
+			
+			.bottom_text h1 {
+				font-size: 18px;
+				padding-bottom: 2px;
+			}
+			
+			.bottom_text p {
+				line-height: 20px;
+				font-size: 14px;
 			}
 		</style>
 	</head>
@@ -30,23 +77,37 @@
 	<body style="background:#000000">
 		<span class="Ac"></span>
 		<div class="wrap">
+			<div class="header_number">
+				<span id="now_number">1</span> / <span id="all_number">4</span>
+			</div>
 			<div id="album" class="album">
 				<ul id="piclist">
 
 				</ul>
 			</div>
+			<div class="bottom_text">
+				<h1 id="title">《韩国的菇凉》</h1>
+				<p id="description">这个美女采用36位地黄丸惊喜提炼而成</p>
+			</div>
 		</div>
 		<script type="text/javascript" src="js/touch.js"></script>
 		<script>
-			function Album(arrimg) {
+			function Album(arrimg, description, title) {
 				this.albumbox = document.getElementById('album');
 				this.piclist = document.getElementById('piclist')
 				this.w_w = window.innerWidth;
 				this.w_h = window.innerHeight;
 				this.arrimg = arrimg;
+				this.descriptionarr = description
+				this.titetext = title
 				this.arrimg_length = this.arrimg.length;
 				this.nowi = 0;
+				this.allnumber = document.getElementById('all_number')
+				this.nownumber = document.getElementById('now_number')
+				this.title = document.getElementById('title')
+				this.description = document.getElementById('description')
 				this.direction = 'left'
+				this.candrag = true
 			}
 			var P_album = Album.prototype
 			P_album.init = function() {
@@ -66,92 +127,194 @@
 				}
 				this.albumbox.style.height = this.w_h + 'px';
 				this.albumbox.style.width = this.w_w * this.arrimg_length + 'px';
+				this.initList(); //插入列表
 				this.albumbox.style.webkitTransition = '0.3s linear';
-				this.initList();
-				this.acitonListener();
-				this.isAndroidWX = (checkU.isAndroid() && checkU.isWeiXin())
+				this.albumbox.style.transitionDuration = "300ms"
+				this.setImgPosition(this.arrimg[0], 0) //显示第一张
+				this.changeMes(0); //首先设置第一个图片需要显示的信息
+				this.title.innerText = this.titetext; //设置相册的标题
+				this.allnumber.innerText = this.arrimg_length; //获得相册的图片总数
+				this.isAndroidWX = (checkU.isAndroid() && checkU.isWeiXin()) //因为安卓微信上有诡异BUG 所以做一下判断
 			}
 			P_album.initList = function() {
-				var self = this
-				for (i = 0; i < self.arrimg_length; i++) {
-					var _li = document.createElement('li');
-					_li.style.height = self.w_h + 'px';
-					_li.style.width = self.w_w + 'px';
-					_li.setAttribute('data-src', self.arrimg[i]);
-					if (i == 0) {
-						_li.style.backgroundImage = "url('" + self.arrimg[i] + "')";
-					} else {
-						_li.style.backgroundImage = "url(images/loading.gif)";
+					var self = this;
+					for (i = 0; i < self.arrimg_length; i++) {
+						var _li = document.createElement('li');
+						_li.style.height = self.w_h + 'px';
+						_li.style.width = self.w_w + 'px';
+						//	_li.setAttribute('data-src', self.arrimg[i]); 
+						var _img = new Image()
+						_img.setAttribute('data-src', self.arrimg[i])
+						_img.setAttribute('class', 'img-responsive')
+						_li.appendChild(_img)
+						self.piclist.appendChild(_li);
 					}
-					_li.style.backgroundSize = '100%';
-					_li.style.backgroundRepeat = 'no-repeat';
-					_li.style.backgroundPosition = 'center';
-					self.piclist.appendChild(_li);
+					self.actionImgListener();
+					self.domimgs = document.querySelectorAll('#album img')
 				}
-			}
-			P_album.changeBkImgUrl = function(i) {
-				var self = this;
-				self.piclistli = self.piclist.querySelectorAll('li');
-				var _imgurl = self.piclistli[i].getAttribute('data-src');
-				var _src = 'url("' + _imgurl + '")';
-				var _bkimg = self.piclistli[i].style.backgroundImage;
-				if (_src == _bkimg) {
-					return;
-				}
-				self.piclistli[i].style.webkitTransition = '0.3s linear';
-				var _img = new Image();
-				_img.src = _imgurl;
+				//设置图片的位置
+			P_album.setImgPosition = function(imgsrc, i) {
+				var self = this
+				var _img = new Image()
+				_img.src = imgsrc
 				_img.onload = function() {
-					self.piclistli[i].style.backgroundSize = '100%';
-					self.piclistli[i].style.backgroundImage = _src;
+					var img = self.domimgs[i];
+					img.setAttribute('src', imgsrc);
+					var scalew = self.w_w / img.width
+					var imgh = img.height * scalew
+						//当高度大于屏幕高度
+					if (imgh > self.w_h) {
+						var scaleh = self.w_h / img.height
+						var imgw = img.width * scaleh
+						img.style.top = "0px"
+						img.style.height = self.w_h + 'px'
+						img.style.left = '50%'
+						img.style.marginLeft = -imgw / 2 + 'px'
+					} else {
+						img.style.top = "50%"
+						img.style.left = '0%'
+						img.style.marginTop = -imgh / 2 + 'px'
+					}
 				}
 			}
-			P_album.acitonListener = function() {
+			P_album.actionImgListener = function(img) {
+				document.addEventListener('touchstart', function(e) {
+					e.preventDefault()
+				}, false)
 				var self = this;
-				var dx;
-				//				self.albumbox.addEventListener( ,function(ev){
-				touch.on(self.albumbox, 'drag', function(ev) {
-					dx = dx || 0;
-					var offx = dx + ev.x + "px";
-					if(self.isAndroidWX){
+				var isbig = false;
+				var scale = 1
+				var dx, dy
+				document.addEventListener('doubletap', function(e) {
+					var el = e.target
+					el.style.webkitTransitionDuration = '0.3s'
+					el.style.transitionDuration = "0.3s"
+					if (isbig == true) {
+						el.style.webkitTransform = 'translate3d(0px ,0px, 0px) scale(1)'
+						isbig = false
 						return
 					}
-					self.albumbox.style.webkitTransform = "translate3d(" + offx + ",0,0)";
-				})
-				touch.on(self.albumbox, 'dragend', function(ev) {
-					if (ev.x < 0 && ev.x < -80) {
-						self.direction = 'left';
-						self.computeNowi();
-						self.albumbox.style.webkitTransform = "translateX(-" + self.w_w * self.nowi + "px)";
-						dx = -self.w_w * self.nowi;
-					} else if (ev.x > 0 && ev.x > 80) {
-						self.direction = 'right';
-						self.computeNowi();
-						self.albumbox.style.webkitTransform = "translateX(-" + self.w_w * self.nowi + "px)";
-						dx = -self.w_w * self.nowi;
+					if (el.getAttribute('src') == undefined) {
+						return
+					}
+					var _h_scale = self.w_h / el.height;
+					var _w_scale = self.w_w / el.width;
+					//保证 至少是双倍放大
+					_h_scale = _h_scale > 2 ? _h_scale : 2;
+					_w_scale = _w_scale > 2 ? _w_scale : 2;
+					var offy = (self.w_h / 2 - e.detail.position.y) * scale + 'px'
+					if (_h_scale > _w_scale) {
+						//宽大于高的图片
+						doubleToBig(_h_scale, e, el)
 					} else {
-						//没达到拖动标准距离反弹回去
-						self.albumbox.style.webkitTransform = "translateX(-" + self.w_w * self.nowi + "px)";
+						doubleToBig(_w_scale, e, el)
+					}
+				}, false)
+				touch.on(document, 'drag', function(ev) {
+					var el = ev.target
+					if (isbig) {
+						var _offx = dx + ev.x
+						var _offy = dy + ev.y
+						_offy = dargMaxValue(_offy, el.height, self.w_h, ev.y)
+						_offx = dargMaxValue(_offx, el.width, self.w_w, ev.x)
+						el.style.webkitTransitionDuration = '0'
+						el.style.webkitTransform = 'translate3d(' + _offx + 'px,' + _offy + 'px, 0px) scale(' + scale + ')'
+					} else {
+						//没有被放大的情况下
+						var _n_offx = -(self.w_w * self.nowi) + ev.x
+						if (!self.isAndroidWX) {
+							self.albumbox.style.webkitTransform = "translate3d(" + _n_offx + "px,0,0)";
+						}
 					}
 				});
-				document.addEventListener('touchstart', function(e) {
-					e.preventDefault();
-				}, false)
-				self.albumbox.addEventListener('tap', function(e) {
-					e.preventDefault();
-				}, false)
-				self.albumbox.addEventListener('touchstart', function(e) {
-					e.preventDefault();
-				}, false)
-				self.albumbox.addEventListener('webkitTransitionEnd', function() {
-					self.changeBkImgUrl(self.nowi);
-				}, false)
+				touch.on(document, 'dragend', function(ev) {
+						var el = ev.target
+						if (!isbig) {
+							el.style.webkitTransform = 'translate3d(0px ,0px, 0px)'
+							self.acitonSwitch(ev.x)
+						} else {
+							dx += ev.x;
+							dy += ev.y
+							dy = dargMaxValue(dy, el.height, self.w_h, 0)
+							dx = dargMaxValue(dx, el.width, self.w_w, 0)
+							console.log(dy)
+							el.style.webkitTransitionDuration = '0.3s'
+							el.style.webkitTransform = 'translate3d(' + dx + 'px, ' + dy + 'px, 0px) scale(' + scale + ')'
+						}
+					})
+					//最大位移控制
+				function getOffValue(offvalue, imgSizeV, scale) {
+					var max_offx = (imgSizeV * scale) / 2 - (self.w_h / 2) //得出的结果就是放大后图片中心X值或Y值 与没有放大的图片的X值或Y值 之间的距离
+						//超出最大值则进行控制
+					if (Math.abs(offvalue) > max_offx && offvalue > 0) {
+						return max_offx
+					} else if (Math.abs(offvalue) > max_offx && offvalue < 0) {
+						return -max_offx
+					} else {
+						return offvalue
+					}
+				}
+				//放大拖动时超出最大位移控制
+				function dargMaxValue(val, elheight, w_val, backval) {
+					var _max_y = (elheight * scale / 2) - (w_val / 2);
+					if (Math.abs(val) > _max_y) {
+						if (val > 0) {
+							return _max_y + backval / 4;
+						} else {
+							return -_max_y + backval / 4;
+						}
+					} else {
+						return val
+					}
+				}
+				//双击放大处理方法
+				function doubleToBig(_scale, e, el) {
+					scale = _scale
+					var _offx = (self.w_w / 2 - e.detail.position.x) * scale;
+					var _offy = (self.w_h / 2 - e.detail.position.y) * scale;
+					_offx = getOffValue(_offx, el.width, scale);
+					_offy = getOffValue(_offy, el.height, scale);
+					dx = _offx;
+					dy = _offy
+					console.log(scale)
+					el.style.webkitTransform = 'translate3d(' + _offx + 'px,' + _offy + 'px, 0px) scale(' + scale + ')'
+					isbig = true;
+				}
+			}
+			P_album.acitonSwitch = function(ex) {
+				var self = this;
+				var dx;
+				var _offx;
+				if (ex < 0 && ex < -80) {
+					self.direction = 'left';
+					self.computeNowi();
+					_offx = -(self.w_w * self.nowi) + 'px';
+					self.albumbox.style.webkitTransform = "translate3d(" + _offx + ",0,0)";
+					dx = -self.w_w * self.nowi;
+					self.setImgPosition(self.arrimg[self.nowi], self.nowi);
+					//	self.changeMes(self.nowi)
+				} else if (ex > 0 && ex > 80) {
+					self.direction = 'right';
+					self.computeNowi();
+					_offx = -(self.w_w * self.nowi) + 'px'
+					self.albumbox.style.webkitTransform = "translate3d(" + _offx + ",0,0)";
+					dx = -self.w_w * self.nowi;
+					self.setImgPosition(self.arrimg[self.nowi], self.nowi)
+						//					self.changeMes(self.nowi)
+				} else {
+					//没达到拖动标准距离反弹回去
+					self.albumbox.style.webkitTransform = "translateX(-" + self.w_w * self.nowi + "px)";
+				}
+			}
+			P_album.changeMes = function(i) {
+				this.nownumber.innerText = (i + 1)
+				this.description.innerText = this.descriptionarr[i]
 			}
 			P_album.computeNowi = function() {
 				if (this.direction == 'left') {
 					this.nowi++;
 					this.nowi = this.nowi < (this.arrimg_length - 1) ? this.nowi : (this.arrimg_length - 1);
-					console.log(this.nowi);
+					//					console.log(this.nowi);
 				} else if (this.direction == 'right') {
 					this.nowi--;
 					this.nowi = this.nowi > 0 ? this.nowi : 0;
@@ -168,7 +331,19 @@
 				'http://7xl619.com1.z0.glb.clouddn.com/124%20(9).jpg',
 				'http://7xl619.com1.z0.glb.clouddn.com/124%20(10).jpg'
 			]
-			var album = new Album(imgarr)
+			var descarr = ['这个美女采用36位地黄丸惊喜提炼而成，好吃又大补！',
+				'当他第一次问这个问题的时候，我感觉很难回答。男孩有许多称谓：小鸡鸡、小棒棒、小弟弟、小鸟等！',
+				'果果问我：妈妈，隐私是什么？我把语速放得很慢，轻声但是很坚定地告诉他：隐私就是你最重要最保密的东西！',
+				'因为这是别人的隐私。你去问别人的话，就是不礼貌。知道了吧？知道了，妈妈。果果使劲点了点头，这是一个小男子汉对妈妈的承诺。',
+				'呵呵”一般表示高兴的心情，可以单独使用，也可以和其它的词语搭配使用。',
+				'平时生活中，这个词只有一个用处，用来以最大的效果激怒对方，践踏对方全部的热情。呵呵——当选年度最伤人的聊天词汇！',
+				'香港地区的网友说呵呵，有时候是指BL的意思，因为HE是英语的他，呵呵就是两个他。也有无奈的意思。！',
+				'作为2013年亚洲模特颁奖礼人气奖候选人韩国女星许允美，近日网络上曝光了一组大尺度写真集照，写真集中许允美上身全裸出镜，秀出了完美修长的身材，散发出致命的性感魅力，其中双胸全裸出场简直令人咋舌！',
+				'写真在网络上曝光后，引起了不少争议，特别是丰满圆润的乳房极具诱惑的样子，让许多韩国网民都给予了批判，称：为了吸金和博取眼球，不惜全裸，要求封杀。',
+				'日前，由韩国知名车模许允美代言的20禁网页游戏《升天OL》开始了韩国公测。'
+			]
+			var title = '《这个韩国花姑娘》'
+			var album = new Album(imgarr, descarr, title)
 			album.init()
 		</script>
 	</body>
