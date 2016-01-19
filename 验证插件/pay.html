@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<link rel="stylesheet" href="css/style.css" />
+	</head>
+
+	<body class="bk_grey">
+		<div class="wrap">
+			<div class="container">
+				<div class="box_style1">
+					<ul>
+						<li>
+							<h1>上海爆菊5人5日游
+						</h1>
+							<span class="right_element iconfont icon-jiantou01" style=" top: 1.5rem; color: #dedede;"></span>
+						</li>
+						<li>单人价格：￥2583.00</li>
+						<li>出行人数：
+							<div class="right_element">
+								<span class='iconfont icon-jianhao01 icon-android' id="number_subtraction"></span>
+								<input class="content_number" readonly id="content_number" name="amount" value="1">
+								<span class='iconfont icon-jiahao01 icon-android ' id="number_add"></span>
+							</div>
+						</li>
+						<li>金额总计：
+							<p class="right_element" class="activity_price">￥<span id="activity_price">2583.00</span></p>
+						</li>
+						<li>选择出发日期：
+							<div class="right_element right_time">
+								<div class=" timeshowbox" id="showtime">
+								</div>
+							</div>
+							<input type="date" id="timeselect" class="timeshow right_element" value="" max="2018-02-28" />
+						</li>
+					</ul>
+				</div>
+			</div>
+			<h2 class=" pay_h2">联系人信息</h2>
+			<div class="box_style1 pay_xx">
+				<ul>
+					<li>姓名<span class="color_red">*</span>
+						<input type="text" name="" id="" class="right_element right_input validate_input" data-validate="required" data-error="" />
+					</li>
+					<li>手机<span class="color_red">*</span>
+						<input type="text" name="" id="" class="right_element right_input validate_input" data-validate="required,phone" data-error="" />
+					</li>
+					<li>邮箱<span class="color_red">*</span>
+						<input type="text" name="" id="" class="right_element right_input validate_input" data-validate="required,email" data-error="" />
+					</li>
+				</ul>
+			</div>
+			<h2 class=" pay_h2">支付</h2>
+			<div class="box_style1 pay_way">
+				<ul>
+					<li>
+						<div class="pay_mes">
+							<img src="http://augusta.oss-cn-beijing.aliyuncs.com/iconfont/pay_zfb.jpg" class="img-responsive">
+							<h3>支付宝支付</h3>
+							<p>推荐支付宝用户使用</p>
+						</div>
+						<span class="right_element iconfont icon-xuanzhong01 iconxz"></span>
+					</li>
+				</ul>
+			</div>
+			<div class="blank4"></div>
+			<a class="bottom_a" id="paysubmit" href="javascript:void(0)">我要报名</a>
+		</div>
+
+		<script type="text/javascript" src="js/zepto.min.js"></script>
+		<script type="text/javascript" src="js/validate.js"></script>
+		<script type="text/javascript">
+			function showTs(mes, url) {
+				var html = '<div id="ts"><div class="fixed_bk"></div><div class="fixe_mes"><h3>提示</h3><p>' + mes + '</p><a href="javascript:void(0)" id="go_result">确定</a></div></div>'
+				document.body.innerHTML += html
+				document.getElementById('go_result').addEventListener('tap', function() {
+					setTimeout(function() {
+						document.body.removeChild(document.getElementById('ts'))
+					}, 400)
+				}, false)
+			}
+			Date.prototype.Format = function(fmt) { //author: meizz 
+				var o = {
+					"M+": this.getMonth() + 1, //月份 
+					"d+": this.getDate(), //日 
+					"h+": this.getHours(), //小时 
+					"m+": this.getMinutes(), //分 
+					"s+": this.getSeconds(), //秒 
+					"q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+					"S": this.getMilliseconds() //毫秒 
+				};
+				if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+				for (var k in o)
+					if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+				return fmt;
+			}
+			var timeselect = document.getElementById('timeselect')
+			var datetime = new Date()
+			var nowtime = datetime.Format("yyyy-MM-dd")
+			var showtime = document.getElementById('showtime')
+			timeselect.value = nowtime
+			var nowtimestamp = timeselect.valueAsNumber
+			showtime.innerText = timeselect.value
+			timeselect.addEventListener('blur', function() {
+				showtime.innerText = timeselect.value
+				if (nowtimestamp > timeselect.valueAsNumber) {
+					showtime.innerText = nowtime
+					timeselect.value = nowtime
+					showTs("请选择一个今天以后的时间")
+				}
+			})
+			var activityprice = document.getElementById('activity_price')
+			var numberid = document.getElementById('content_number')
+			var numbersubtraction = document.getElementById('number_subtraction')
+			var numberadd = document.getElementById('number_add')
+			var oneprice = parseFloat(activityprice.innerText).toFixed(2)
+			var nownumber = numberid.value
+
+			function changePric(number) {
+				var _price = (oneprice * number).toFixed(2)
+				activityprice.innerText = _price
+			}
+			numberadd.addEventListener('tap', function() {
+				this.style.color = '#ff6666'
+				numbersubtraction.style.color = '#ff6666'
+				nownumber++
+				numberid.value = nownumber
+				changePric(nownumber)
+			}, false)
+			numbersubtraction.addEventListener('tap', function() {
+				nownumber--
+				if (nownumber < 1) {
+					nownumber = 1
+					this.style.color = "#dedede"
+					return
+				}
+				numberid.value = nownumber
+				changePric(nownumber)
+			}, false)
+			var submitbtn = document.getElementById('paysubmit')
+			var v = new validate()
+			v.validate_init()
+			submitbtn.addEventListener('tap', function() {
+				var _bool = v.validate_Btn()
+			}, false)
+		</script>
+
+	</body>
+
+</html>

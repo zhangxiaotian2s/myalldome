@@ -186,39 +186,46 @@
 				var scale = 1
 				var dx, dy
 				document.addEventListener('doubletap', function(e) {
-					var el = e.target
-					el.style.webkitTransitionDuration = '0.3s'
-					el.style.transitionDuration = "0.3s"
-					if (isbig == true) {
-						el.style.webkitTransform = 'translate3d(0px ,0px, 0px) scale(1)'
-						isbig = false
-						return
-					}
-					if (el.getAttribute('src') == undefined) {
-						return
-					}
-					var _h_scale = self.w_h / el.height;
-					var _w_scale = self.w_w / el.width;
-					//保证 至少是双倍放大
-					_h_scale = _h_scale > 2 ? _h_scale : 2;
-					_w_scale = _w_scale > 2 ? _w_scale : 2;
-					var offy = (self.w_h / 2 - e.detail.position.y) * scale + 'px'
-					if (_h_scale > _w_scale) {
-						//宽大于高的图片
-						doubleToBig(_h_scale, e, el)
-					} else {
-						doubleToBig(_w_scale, e, el)
-					}
-				}, false)
+						var el = e.target;
+						el.style.webkitTransitionDuration = '0.3s'
+						el.style.transitionDuration = "0.3s"
+						if (isbig == true) {
+							el.style.webkitTransform = 'translate3d(0px ,0px, 0px) scale(1)'
+							isbig = false
+							return
+						}
+						if (el.getAttribute('src') == undefined) {
+							return
+						}
+						var _h_scale = self.w_h / el.height;
+						var _w_scale = self.w_w / el.width;
+						//保证 至少是双倍放大
+						_h_scale = _h_scale > 2 ? _h_scale : 2;
+						_w_scale = _w_scale > 2 ? _w_scale : 2;
+						var offy = (self.w_h / 2 - e.detail.position.y) * scale + 'px'
+						if (_h_scale > _w_scale) {
+							//宽大于高的图片
+							doubleToBig(_h_scale, e, el)
+						} else {
+							doubleToBig(_w_scale, e, el)
+						}
+					}, false)
+					//拖动
 				touch.on(document, 'drag', function(ev) {
 					var el = ev.target
 					if (isbig) {
-						var _offx = dx + ev.x
-						var _offy = dy + ev.y
-						_offy = dargMaxValue(_offy, el.height, self.w_h, ev.y)
-						_offx = dargMaxValue(_offx, el.width, self.w_w, ev.x)
+						var _offx = dx + ev.x;
+						var _offy = dy + ev.y;
+						var catch_offx = _offx
+						_offy = dargMaxValue(_offy, el.height, self.w_h, ev.y);
+						_offx = dargMaxValue(_offx, el.width, self.w_w, 0);
 						el.style.webkitTransitionDuration = '0'
-						el.style.webkitTransform = 'translate3d(' + _offx + 'px,' + _offy + 'px, 0px) scale(' + scale + ')'
+						if ((Math.abs(_offx)) >= (el.width * scale / 2) - (self.w_w / 2)) {
+							console.log(ev.x)
+							var _boxmove = self.w_w * self.nowi - (catch_offx - _offx);
+							self.albumbox.style.webkitTransform = 'translate3d(-' + _boxmove + 'px, 0px, 0px)'
+						}
+						el.style.webkitTransform = 'translate3d(' + _offx + 'px,' + _offy + 'px, 0px) scale(' + scale + ')' 
 					} else {
 						//没有被放大的情况下
 						var _n_offx = -(self.w_w * self.nowi) + ev.x
@@ -231,37 +238,45 @@
 						var el = ev.target
 						if (!isbig) {
 							el.style.webkitTransform = 'translate3d(0px ,0px, 0px)'
-							self.acitonSwitch(ev.x)
+							self.dragSwitchFn(ev.x)
 						} else {
 							dx += ev.x;
-							dy += ev.y
-							dy = dargMaxValue(dy, el.height, self.w_h, 0)
-							dx = dargMaxValue(dx, el.width, self.w_w, 0)
-							console.log(dy)
-							el.style.webkitTransitionDuration = '0.3s'
-							el.style.webkitTransform = 'translate3d(' + dx + 'px, ' + dy + 'px, 0px) scale(' + scale + ')'
+							dy += ev.y;
+							if ((Math.abs(dx) - 80) > (el.width * scale / 2) - (self.w_w / 2)) {
+								el.style.webkitTransitionDuration = '0.3s';
+								el.style.webkitTransform = 'translate3d(0px ,0px, 0px) scale(1)';
+								self.dragSwitchFn(ev.x);
+								isbig = false;
+							} else {
+								dy = dargMaxValue(dy, el.height, self.w_h, 0);
+								dx = dargMaxValue(dx, el.width, self.w_w, 0);
+								el.style.webkitTransitionDuration = '0.3s';
+								var _boxmove = self.w_w * self.nowi;
+								self.albumbox.style.webkitTransform = 'translate3d(-' + _boxmove + 'px, 0px, 0px)';
+								el.style.webkitTransform = 'translate3d(' + dx + 'px, ' + dy + 'px, 0px) scale(' + scale + ')';
+							}
 						}
 					})
 					//最大位移控制
-				function getOffValue(offvalue, imgSizeV, scale) {
-					var max_offx = (imgSizeV * scale) / 2 - (self.w_h / 2) //得出的结果就是放大后图片中心X值或Y值 与没有放大的图片的X值或Y值 之间的距离
+				function getOffValue(offvalue, imgSizeV, wvalue, scale) {
+					var max_offx = (imgSizeV * scale) / 2 - (wvalue / 2) //得出的结果就是放大后图片中心X值或Y值 与没有放大的图片的X值或Y值 之间的距离
 						//超出最大值则进行控制
 					if (Math.abs(offvalue) > max_offx && offvalue > 0) {
-						return max_offx
+						return max_offx;
 					} else if (Math.abs(offvalue) > max_offx && offvalue < 0) {
-						return -max_offx
+						return -max_offx;
 					} else {
-						return offvalue
+						return offvalue;
 					}
 				}
 				//放大拖动时超出最大位移控制
-				function dargMaxValue(val, elheight, w_val, backval) {
-					var _max_y = (elheight * scale / 2) - (w_val / 2);
-					if (Math.abs(val) > _max_y) {
+				function dargMaxValue(val, elvalue, w_val, backval) {
+					var _max_value = (elvalue * scale / 2) - (w_val / 2);
+					if (Math.abs(val) > _max_value) {
 						if (val > 0) {
-							return _max_y + backval / 4;
+							return _max_value + backval / 5;
 						} else {
-							return -_max_y + backval / 4;
+							return -_max_value + backval / 5;
 						}
 					} else {
 						return val
@@ -272,8 +287,8 @@
 					scale = _scale
 					var _offx = (self.w_w / 2 - e.detail.position.x) * scale;
 					var _offy = (self.w_h / 2 - e.detail.position.y) * scale;
-					_offx = getOffValue(_offx, el.width, scale);
-					_offy = getOffValue(_offy, el.height, scale);
+					_offx = getOffValue(_offx, el.width, self.w_w, scale);
+					_offy = getOffValue(_offy, el.height, self.w_h, scale);
 					dx = _offx;
 					dy = _offy
 					console.log(scale)
@@ -281,41 +296,39 @@
 					isbig = true;
 				}
 			}
-			P_album.acitonSwitch = function(ex) {
-				var self = this;
-				var dx;
-				var _offx;
-				if (ex < 0 && ex < -80) {
-					self.direction = 'left';
-					self.computeNowi();
-					_offx = -(self.w_w * self.nowi) + 'px';
-					self.albumbox.style.webkitTransform = "translate3d(" + _offx + ",0,0)";
-					dx = -self.w_w * self.nowi;
-					self.setImgPosition(self.arrimg[self.nowi], self.nowi);
-					//	self.changeMes(self.nowi)
-				} else if (ex > 0 && ex > 80) {
-					self.direction = 'right';
-					self.computeNowi();
-					_offx = -(self.w_w * self.nowi) + 'px'
-					self.albumbox.style.webkitTransform = "translate3d(" + _offx + ",0,0)";
-					dx = -self.w_w * self.nowi;
-					self.setImgPosition(self.arrimg[self.nowi], self.nowi)
-						//					self.changeMes(self.nowi)
-				} else {
-					//没达到拖动标准距离反弹回去
-					self.albumbox.style.webkitTransform = "translateX(-" + self.w_w * self.nowi + "px)";
+			P_album.dragSwitchFn = function(ex) {
+					var self = this;
+					var dx;
+					var _offx;
+					if (ex < 0 && ex < -80) {
+						switchFn('left')
+					} else if (ex > 0 && ex > 80) {
+						switchFn('right')
+					} else {
+						//没达到拖动标准距离反弹回去
+						self.albumbox.style.webkitTransform = "translateX(-" + self.w_w * self.nowi + "px)";
+					}
+
+					function switchFn(description) {
+						self.computeNowi(description);
+						_offx = -(self.w_w * self.nowi) + 'px'
+						self.albumbox.style.webkitTransform = "translate3d(" + _offx + ",0,0)";
+						dx = -self.w_w * self.nowi;
+						self.setImgPosition(self.arrimg[self.nowi], self.nowi)
+						self.changeMes(self.nowi)
+					}
 				}
-			}
+				//切换展示文字信息
 			P_album.changeMes = function(i) {
-				this.nownumber.innerText = (i + 1)
-				this.description.innerText = this.descriptionarr[i]
-			}
-			P_album.computeNowi = function() {
-				if (this.direction == 'left') {
+					this.nownumber.innerText = (i + 1)
+					this.description.innerText = this.descriptionarr[i]
+				}
+				//计算nowi
+			P_album.computeNowi = function(description) {
+				if (description == 'left') {
 					this.nowi++;
 					this.nowi = this.nowi < (this.arrimg_length - 1) ? this.nowi : (this.arrimg_length - 1);
-					//					console.log(this.nowi);
-				} else if (this.direction == 'right') {
+				} else if (description == 'right') {
 					this.nowi--;
 					this.nowi = this.nowi > 0 ? this.nowi : 0;
 				}
