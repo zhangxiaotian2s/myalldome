@@ -1,0 +1,14 @@
+*{margin: 0;padding: 0; font: 14px / 1.5 "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",sans-serif;}
+li{ list-style: none;}
+a{ text-decoration: none;}
+body{ 
+overflow: hidden;
+  }
+.sectionbox{ width: 100%; min-width: 1200px; overflow: hidden; position: relative;}
+.sectionone{ width: 100%;  overflow: hidden;}
+.sectionwrap{ width: 100%; position: absolute; top: 0px; left: 0px;}
+
+
+.fixed_ol{ width: 10px; position: fixed; right: 20px; top: 260px;}
+.fixed_ol ol li{ width: 10px; height: 10px; margin: 20px auto; background: #FFFFFF; cursor: pointer; border-radius: 5px;}
+.fixed_ol ol li.current{ background: #000000;}
