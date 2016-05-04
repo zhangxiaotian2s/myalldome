@@ -3,10 +3,10 @@ li{list-style: none;}
 a{text-decoration: none;}
 
 .warter_conter{  max-width: 480px; width: 100%;margin: auto;}
-.col-xs-4{ width: 33.333333%;  float: left;}
-.warter_conter  .col-xs-4 img{ display: block;  width: 90%; margin:0.5rem auto; 
+.col-xs-6{ width: 50%;  float: left;}
+.warter_conter  .col-xs-6 img{ display: block;  width: 90%; margin:0.5rem auto; 
 }
-.warter_conte  .col-xs-4  div{ height: auto;}
+.warter_conte  .col-xs-6  div{ height: auto;}
 .clearfix:after {
 content: "."; 
 display: block; 

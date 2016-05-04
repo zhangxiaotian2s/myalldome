@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../public.css" />
+		<style>
+			.drag-data-list {
+				width: 120px;
+				border: #333333 solid 1px;
+			}
+			
+			.drag-data-list ul li {
+				width: 120px;
+				height: 30px;
+				line-height: 30px;
+				border-bottom: #333333 solid 1px;
+				cursor: pointer;
+			}
+			
+			.drop-box {
+				background: #DEDEDE;
+				min-height: 100px;
+				height: 30px;
+				width: 800px;
+				margin: auto;
+				cursor: pointer;
+			}
+			
+			.dragbox {
+				border: #333333 solid 1px;
+				position: fixed;
+				left: -1000000px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="drag-data-list" id="drag-data-list">
+			<ul>
+				<li class="dragli">卧槽_1</li>
+				<li class="dragli">卧槽_2</li>
+				<li class="dragli">卧槽_3</li>
+				<li class="dragli">卧槽_4</li>
+				<li class="dragli">卧槽_5</li>
+				<li class="dragli">卧槽_6</li>
+				<li class="dragli">卧槽_7</li>
+				<li class="dragli">卧槽_8</li>
+				<li class="dragli">卧槽_9</li>
+				<li class="dragli">卧槽_10</li>
+			</ul>
+		</div>
+		<div class="drop-box" id="drop-box">
+
+		</div>
+		<script type="text/javascript" src="../jquery.min.js"></script>
+		<script>
+			var dragli = document.querySelectorAll('.dragli');
+			var dropbox = document.querySelector('#drop-box');
+			var eleDrag = ''
+			for (var i = 0; i < dragli.length; i++) {
+				dragli[i].addEventListener('selectstart', function(ev) {
+					ev.preventDefault()
+				}, false)
+				dragli[i].addEventListener('dragstart', function(ev){
+					dragstarFn(ev)
+				}, false)
+				dragli[i].addEventListener('dragend ', function(ev){
+					dragendFn(ev)
+				}, false)
+			}
+			dropbox.addEventListener('dragover',function(ev){
+				dragoverFn(ev)
+			},false )
+           dropbox.addEventListener('dragenter',function(ev){
+           	  dragenterFn(ev)
+           },false)
+             dropbox.addEventListener('drop',function(ev){
+             	dropFn(ev)
+             },false)
+           
+
+			function dragstarFn(ev) {
+				ev.dataTransfer.effectAllowed = "move";
+				ev.dataTransfer.setData("text", ev.target.innerHTML);
+				ev.dataTransfer.setDragImage(ev.target, 0, 0);
+				eleDrag = ev.target;
+				console.log(eleDrag)
+				return true;
+			}
+
+			function dragendFn(ev) {
+				ev.dataTransfer.clearData("text");
+				eleDrag = null;
+				return false
+			}
+
+			function dragoverFn(ev) {
+				/*拖拽元素在目标元素头上移动的时候*/
+				ev.preventDefault();
+				return true;
+			}
+
+			function dragenterFn(ev) {
+				return true;
+			}
+
+			function dropFn(ev) {
+				if (eleDrag) {
+					console.log( ''+ eleDrag.innerHTML + '被扔进了垃圾箱');
+					eleDrag.parentNode.removeChild(eleDrag);
+				}
+//				this.style.color = "#000000";
+				return false;
+			}
+
+			function moveboxFn(movebox, x, y) {
+				movebox.css({
+					'position': 'fixed',
+					'top': (y) + 'px',
+					'left': (x) + 'px',
+					'cursor': 'pointer'
+				})
+			}
+		</script>
+	</body>
+
+</html>

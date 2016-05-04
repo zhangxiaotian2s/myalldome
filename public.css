@@ -33,7 +33,7 @@ html{font-size:10px}
 }
 /*常用配置*/
 .wrap{ max-width: 640px; margin: auto; overflow: hidden;}
-.bk_grey{ background: #F6F6F6;}
+.bk-grey{ background: #F6F6F6;}
 .clearfix:after {
 content: "."; 
 display: block; 
@@ -41,6 +41,7 @@ height: 0;
 clear: both; 
 visibility: hidden;
 }
+.imgblock{ display: block;}
 .clear{clear: both;}
 .img-responsive{ display: block;max-width: 100%;height: auto; margin: auto;}
 .img-circle{border-radius:50%}
@@ -51,10 +52,13 @@ visibility: hidden;
   width: 100%;
   clear: both;
 }
-.red_error{border:#ff0000 solid 1px!important;color:#ff0000!important;}
-.blank-15{ height: 15px;clear: both; overflow: hidden;}
-.bk_white{ background: #FFFFFF;}
-.bk_gray{ background: #f6f6f6;}
+.red-error{border:#ff0000 solid 1px!important;color:#ff0000!important;}
+.blank-5{ height: 0.5rem;clear: both; overflow: hidden;}
+.blank-10{ height: 1.0rem;clear: both; overflow: hidden;}
+.blank-15{ height: 1.5rem;clear: both; overflow: hidden;}
+.blank-20{ height: 2rem;clear: both; overflow: hidden;}
+.bk-white{ background: #FFFFFF;}
+.bk-gray{ background: #f6f6f6;}
 .col-xs-1,.col-xs-10,.col-xs-11,.col-xs-12,.col-xs-2,.col-xs-3,.col-xs-4,.col-xs-5,.col-xs-6,.col-xs-7,.col-xs-8,.col-xs-9
 {float:left}
 .col-xs-12{width:100%}

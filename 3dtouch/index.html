@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+		<meta content="yes" name="apple-mobile-web-app-capable">
+		<meta content="black" name="apple-mobile-web-app-status-bar-style">
+		<meta content="telephone=no" name="format-detection">
+		<meta content="email=no" name="format-detection">
+		<title></title>
+		<link rel="stylesheet" href="../public.css" />
+		<link rel="stylesheet" href="style.css" />
+	</head>
+
+	<body class="bk-gray">
+		<div class="wrap" id="wrap">
+			<div class="hold-btns" data-hold-type="1">hold-btns</div>
+			<div class="hold-btns" data-hold-type="1">hold-btns</div>
+			<div class="hold-btns" data-hold-type="1">hold-btns</div>
+			<div class="hold-btns" data-hold-type="1">hold-btns</div>
+			<div class="hold-btns" data-hold-type="1">hold-btns</div>
+			<div class="hold-btns" data-hold-type="1">hold-btns</div>
+			<div class="hold-btns" data-hold-type="1">hold-btns</div>
+			<div class="hold-btns" data-hold-type="1">hold-btns</div>
+			<div class="hold-btns" data-hold-type="1">hold-btns</div>
+			<div class="hold-btns" data-hold-type="1">hold-btns</div>
+		</div>
+		<!--<div class="fixed-hold-box">
+
+		</div>-->
+		<script src="../zeptoandtouch.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			(function($) {
+				$.holdTouch = function() {
+					function Holdfn() {
+						this.btns = $('.hold-btns');
+						this.win_w = $(window).width();
+						this.win_h = $(window).height();
+						this.wrap = $('.wrap');
+					}
+					Holdfn.prototype = {
+						insertTypeImg: function(type) {
+							var _this = this;
+							$('#wrap').css({
+								'-webkit-filter': 'blur(3px)',
+							})
+							_this.insertImgBox('http://7xl619.com1.z0.glb.clouddn.com/m4.jpg')
+						},
+						insertImgBox: function(imgsrc) {
+							var _this = this;
+							var _img = new Image();
+							var _html = '';
+							_img.onload = function() {
+								var _top = (_this.win_h - (_this.win_w*0.8* (_img.height / _img.width))) / 2
+								_html += '<div class="fixed-hold-img-box bigin" id="fixed-hold-img-box" style="top:' + _top + 'px"><img src=' + imgsrc + ' class="img-responsive"></div>'
+								$('body').append(_html)
+							}
+							_img.src = imgsrc
+						}
+					}
+					Holdfn.prototype.holdBtnsFn = function() {
+						var _this = this;
+						_this.btns.on('touchstart', function(ev) {
+							ev.preventDefault()
+						})
+						touch.on('.hold-btns', 'hold', function() {
+							_this.insertTypeImg()
+						})
+					}
+					Holdfn.prototype.holdRemoveFixed=function(){
+						var _this = this;
+						$(document).bind('touchstart','#fixed-hold-img-box',function(ev){
+							ev.preventDefault()
+						})
+						touch.on('#wrap', 'tap', function() {
+							$(document).find('#fixed-hold-img-box').remove()
+							$('#wrap').css({
+								'-webkit-filter': 'blur(0px)',
+							})
+							
+						})
+						
+					}
+					
+					var holdfn = new Holdfn()
+					holdfn.holdBtnsFn()
+					holdfn.holdRemoveFixed()
+				}
+			})(Zepto)
+			$.holdTouch()
+		</script>
+	</body>
+
+</html>

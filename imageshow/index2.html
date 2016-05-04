@@ -101,7 +101,7 @@
 				this.descriptionarr = description
 				this.titetext = title
 				this.arrimg_length = this.arrimg.length;
-				this.nowi = 0;
+				this.nowi =2;
 				this.allnumber = document.getElementById('all_number')
 				this.nownumber = document.getElementById('now_number')
 				this.title = document.getElementById('title')
@@ -128,10 +128,12 @@
 				this.albumbox.style.height = this.w_h + 'px';
 				this.albumbox.style.width = this.w_w * this.arrimg_length + 'px';
 				this.initList(); //插入列表
+				var _boxmove = this.w_w * this.nowi;
+				this.albumbox.style.webkitTransform = 'translate3d(-' + _boxmove + 'px, 0px, 0px)';
 				this.albumbox.style.webkitTransition = '0.3s linear';
 				this.albumbox.style.transitionDuration = "300ms"
-				this.setImgPosition(this.arrimg[0], 0) //显示第一张
-				this.changeMes(0); //首先设置第一个图片需要显示的信息
+				this.setImgPosition(this.arrimg[2], 2) //显示第一张
+				this.changeMes(2); //首先设置第一个图片需要显示的信息
 				this.title.innerText = this.titetext; //设置相册的标题
 				this.allnumber.innerText = this.arrimg_length; //获得相册的图片总数
 				this.isAndroidWX = (checkU.isAndroid() && checkU.isWeiXin()) //因为安卓微信上有诡异BUG 所以做一下判断

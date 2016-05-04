@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../public.css" />
+		<style>
+			.drag-data-list {
+				width: 120px;
+				border: #333333 solid 1px;
+			}
+			
+			.drag-data-list ul li {
+				width: 120px;
+				height: 30px;
+				line-height: 30px;
+				border-bottom: #333333 solid 1px;
+				cursor: pointer;
+			}
+			
+			.drop-box {
+				background: #DEDEDE;
+				min-height: 100px;
+				height: 30px;
+				width: 800px;
+				margin: auto;
+				cursor: pointer;
+			}
+			
+			.dragbox {
+				border: #333333 solid 1px;
+				position: fixed;
+				left: -1000000px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="drag-data-list" id="drag-data-list">
+			<ul>
+				<li>卧槽_1</li>
+				<li>卧槽_2</li>
+				<li>卧槽_3</li>
+				<li>卧槽_4</li>
+				<li>卧槽_5</li>
+				<li>卧槽_6</li>
+				<li>卧槽_7</li>
+				<li>卧槽_8</li>
+				<li>卧槽_9</li>
+				<li>卧槽_10</li>
+			</ul>
+		</div>
+		<div class="drop-box">
+
+		</div>
+		<script type="text/javascript" src="../jquery.min.js"></script>
+		<script>
+			var dragelement = '',
+				dragmove = false;
+			candrop = false,
+				dropindex = '',
+				dragtext = '';
+			var movebox = '<div class="movebox"></div>'
+			$('#drag-data-list').find('li').on('dragenter', function(e) {
+				console.log("ss")
+				e.preventDefault()
+				dragtext = $(this).text()
+				dragmove = true;
+				movebox = $('<div class="dragbox"></div>')
+				movebox.text(dragtext)
+				$('body').append(movebox)
+				console.log(movebox)
+				$('body').on('mousemove', function(e) {
+					e.preventDefault()
+					if (dragmove) {
+						moveboxFn(movebox, e.pageX, e.pageY)
+						$('.drop-box').on('mouseover', function() {
+							candrop = true
+							dropindex = $(this).index('.drop-box')
+							console.log(dropindex)
+						})
+					}
+				})
+				$('body').on('mouseup', function(e) {
+					e.preventDefault()
+					dragmove = false
+					if (candrop) {
+						$('.drop-box').eq(dropindex).append(movebox)
+						candrop = false
+					}
+				})
+			})
+
+			function moveboxFn(movebox, x, y) {
+				movebox.css({
+					'position': 'fixed',
+					'top': (y) + 'px',
+					'left': (x) + 'px',
+					'cursor': 'pointer'
+				})
+			}
+		</script>
+	</body>
+
+</html>

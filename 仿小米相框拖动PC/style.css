@@ -1,0 +1,9 @@
+*{margin: 0;padding: 0; font: 14px / 1.5 "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",sans-serif;}
+li{ list-style: none;}
+a{ text-decoration: none;}
+
+
+.imgwrap{ width: 1226px; height: 1100px; margin: auto;position: relative;}
+.ani-box{ width: 100%; height: 300px;position: absolute; left: 0px;top: 495px; background: url(camera-view.jpg); background-repeat:  no-repeat; background-position: center -112px ;}
+.view{width: 287px;height: 516px;position: absolute;top: -112px;left: 0;background-repeat: no-repeat;background-image:url(camera-view.jpg) ;}
+.phone{width: 352px;height: 677px;position: absolute;top: -58px;left: -32px;background-position: center 0;background-repeat: no-repeat;background-image: url(camera-view-phone.png)}

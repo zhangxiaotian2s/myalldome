@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="../jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<iframe src="http://115.28.141.223:89/WebServices/KMService.ashx?Option=GetWorkerExtension&KgId=33" id="iframe"></iframe>
+		<script>
+      $.ajax({
+      	type:"get",
+      	url:"http://api.development.mastergolf.cn/v1/news/articles/list.json",
+      	  success: function(json){
+             alert("s")
+          }
+      });
+		</script>
+
+	</body>
+
+</html>

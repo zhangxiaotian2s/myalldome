@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+
+	<body>
+		<div class="imgwrap">
+			<div class="ani-box" id="J_viewBox">
+				<div class="view" style="">
+					<div class="phone"></div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../jquery.min.js"></script>
+		<script>
+			var view = $('.view'),
+				view_w = view.width()
+			viewBox = $('#J_viewBox');
+			var boxleft = viewBox.offset().left
+			window.onresize = function() {
+				boxleft = viewBox.offset().left
+			}
+			console.log(boxleft)
+			view.on('mousemove', function(e) {
+				var _left = e.pageX - boxleft - view_w / 2
+				if (_left > 1226 - view_w || _left < 0) {
+					return
+				}
+				view.css({
+					'left': _left + 'px',
+					'background-position-x':-_left+'px'
+				})
+			})
+		</script>
+	</body>
+
+</html>
