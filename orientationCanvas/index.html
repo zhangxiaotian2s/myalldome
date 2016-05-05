@@ -9,28 +9,111 @@
 		<meta content="telephone=no" name="format-detection">
 		<meta content="email=no" name="format-detection">
 		<link rel="stylesheet" href="../public.css" />
+		<style>
+			.canvas {
+				background: #fdfdfd;
+				cursor: ew-resize;
+			}
+		</style>
 	</head>
 
-	<body><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-		<p id="show_orientation"></p>
-		<script type="text/javascript" src="../jquery.min.js"></script>
-		<script type="text/javascript" src="../jquery.mobile-1.4.5.min.js"></script>
+	<body>
+		<div class="wrap">
+			<canvas id="canvas" class="canvas" width="" height="">
+	    
+	    </canvas>
+		</div>
 		<script>
-			function orientationChange() {
-				alert("ss")
-				$('#show_orientation').text(window.orientation)
-//				switch (window.orientation) {
-//					case 0: // Portrait 
-//					case 180: // Upside-down Portrait 
-//						// Javascript to setup Portrait view 
-//						break;
-//					case -90: // Landscape: turned 90 degrees counter-clockwise 
-//					case 90: // Landscape: turned 90 degrees clockwise 
-//						// Javascript to steup Landscape view 
-//						break;
-//				}
+			function imgArrShow(imgarr) {
+				this.width = document.body.clientWidth > 640 ? 640 : document.body.clientWidth;
+				this.height = this.width * 1.5;
+				this.canvas = document.getElementById('canvas');
+				this.ctx = self.canvas.getContext('2d');
+				this.imgarr = imgarr;
+				this.imglength = this.imgarr.length;
+				this.loadimgsrc = 'http://7xl619.com1.z0.glb.clouddn.com/load.gif?10010'
+				this.boolmobile = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)
+				this.showindex = 0
 			}
-			window.addEventListener("onorientationchange", orientationChange, false);
+			var imgArrShowPropty = imgArrShow.prototype
+			imgArrShowPropty.init = function() {
+					var self = this;
+					self.canvas.setAttribute('width', self.width + 'px');
+					self.canvas.setAttribute('height', self.height + 'px');
+					self.loadWait(true)
+					self.loadAllImg();
+					self.pcMouseMove()
+				}
+				//加载缓存所有图片，
+			imgArrShowPropty.loadAllImg = function() {
+				var self = this;
+				var _index = 1;
+				for (var i = 0; i < self.imglength; i++) {
+					var _img = new Image;
+					_img.src = self.imgarr[i];
+					_img.onload = function() {
+						_index++;
+						if (_index >= self.imglength) {
+							self.loadWait(false)
+						}
+					}
+				}
+			}
+			imgArrShowPropty.pcMouseMove = function() {
+					var self = this;
+					self.canvas.addEventListener('mousemove', function(e) {
+						var _position_x = e.pageX - this.offsetLeft
+						var _index = Math.floor(_position_x / (self.width / self.imglength))
+						if(self.showindex!=_index){
+							self.showindex = _index;
+						self.drawArrImg(self.showindex)
+						}
+					}, false)
+				}
+				// loading 状态处理
+			imgArrShowPropty.loadWait = function(bool) {
+				var _bool = Boolean(bool);
+				var self = this;
+				if (_bool) {
+					var _img = new Image;
+					_img.src = self.loadimgsrc;
+					_img.onload = function() {
+						self.ctx.drawImage(_img, (self.width / 2 - 60), (self.height / 2 - 60))
+					}
+				} else {
+					self.ctx.clearRect(0, 0, self.width, self.height)
+					self.drawArrImg(5)
+				}
+			}
+			imgArrShowPropty.drawArrImg = function(index) {
+				console.log(index)
+				var self = this;
+				self.ctx.clearRect(0, 0, self.width, self.height)
+				var _img = new Image;
+				_img.src = self.imgarr[index]
+				_img.setAttribute('width',self.width+'px')
+				 console.log(_img)
+				self.ctx.drawImage(_img, 0, 0)
+			}
+			var myimgarr = ['http://7xl619.com1.z0.glb.clouddn.com/1.jpg',
+				'http://7xl619.com1.z0.glb.clouddn.com/2.jpg',
+				'http://7xl619.com1.z0.glb.clouddn.com/3.jpg',
+				'http://7xl619.com1.z0.glb.clouddn.com/4.jpg',
+				'http://7xl619.com1.z0.glb.clouddn.com/5.jpg',
+				'http://7xl619.com1.z0.glb.clouddn.com/6.jpg',
+				'http://7xl619.com1.z0.glb.clouddn.com/7.jpg',
+				'http://7xl619.com1.z0.glb.clouddn.com/9.jpg',
+				'http://7xl619.com1.z0.glb.clouddn.com/9.jpg',
+				'http://7xl619.com1.z0.glb.clouddn.com/10.jpg'
+			]
+			var imgarrshow = new imgArrShow(myimgarr)
+			imgarrshow.init()
+				//			var showmes = document.querySelector('#show_mes')
+				//			window.addEventListener("deviceorientation", function(e) {
+				//				e.gamma //横向翻转
+				//				var _gamma = Math.ceil(e.gamma)
+				//				showmes.innerText = _gamma
+				//			}, false);
 		</script>
 
 	</body>
