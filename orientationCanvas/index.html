@@ -8,112 +8,39 @@
 		<meta content="black" name="apple-mobile-web-app-status-bar-style">
 		<meta content="telephone=no" name="format-detection">
 		<meta content="email=no" name="format-detection">
-		<link rel="stylesheet" href="../public.css" />
-		<style>
-			.canvas {
-				background: #fdfdfd;
-				cursor: ew-resize;
-			}
-		</style>
+		<link rel="stylesheet" type="text/css" href="css/style.css" />
 	</head>
 
 	<body>
 		<div class="wrap">
-			<canvas id="canvas" class="canvas" width="" height="">
-	    
-	    </canvas>
+			<div class="canvasbox pr clearfix">
+				<canvas id="canvas" class="canvas" width="" height=""></canvas>
+				<div class="pa loadingbox" id="loadingbox">
+					<img src="http://7xl619.com1.z0.glb.clouddn.com/load.gif?timer=2016" class="img-responsive">
+				</div>
+			</div>
 		</div>
+		<script type="text/javascript" src="js/orientation.js"></script>
 		<script>
-			function imgArrShow(imgarr) {
-				this.width = document.body.clientWidth > 640 ? 640 : document.body.clientWidth;
-				this.height = this.width * 1.5;
-				this.canvas = document.getElementById('canvas');
-				this.ctx = self.canvas.getContext('2d');
-				this.imgarr = imgarr;
-				this.imglength = this.imgarr.length;
-				this.loadimgsrc = 'http://7xl619.com1.z0.glb.clouddn.com/load.gif?10010'
-				this.boolmobile = navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)
-				this.showindex = 0
-			}
-			var imgArrShowPropty = imgArrShow.prototype
-			imgArrShowPropty.init = function() {
-					var self = this;
-					self.canvas.setAttribute('width', self.width + 'px');
-					self.canvas.setAttribute('height', self.height + 'px');
-					self.loadWait(true)
-					self.loadAllImg();
-					self.pcMouseMove()
-				}
-				//加载缓存所有图片，
-			imgArrShowPropty.loadAllImg = function() {
-				var self = this;
-				var _index = 1;
-				for (var i = 0; i < self.imglength; i++) {
-					var _img = new Image;
-					_img.src = self.imgarr[i];
-					_img.onload = function() {
-						_index++;
-						if (_index >= self.imglength) {
-							self.loadWait(false)
-						}
-					}
-				}
-			}
-			imgArrShowPropty.pcMouseMove = function() {
-					var self = this;
-					self.canvas.addEventListener('mousemove', function(e) {
-						var _position_x = e.pageX - this.offsetLeft
-						var _index = Math.floor(_position_x / (self.width / self.imglength))
-						if(self.showindex!=_index){
-							self.showindex = _index;
-						self.drawArrImg(self.showindex)
-						}
-					}, false)
-				}
-				// loading 状态处理
-			imgArrShowPropty.loadWait = function(bool) {
-				var _bool = Boolean(bool);
-				var self = this;
-				if (_bool) {
-					var _img = new Image;
-					_img.src = self.loadimgsrc;
-					_img.onload = function() {
-						self.ctx.drawImage(_img, (self.width / 2 - 60), (self.height / 2 - 60))
-					}
-				} else {
-					self.ctx.clearRect(0, 0, self.width, self.height)
-					self.drawArrImg(5)
-				}
-			}
-			imgArrShowPropty.drawArrImg = function(index) {
-				console.log(index)
-				var self = this;
-				self.ctx.clearRect(0, 0, self.width, self.height)
-				var _img = new Image;
-				_img.src = self.imgarr[index]
-				_img.setAttribute('width',self.width+'px')
-				 console.log(_img)
-				self.ctx.drawImage(_img, 0, 0)
-			}
-			var myimgarr = ['http://7xl619.com1.z0.glb.clouddn.com/1.jpg',
-				'http://7xl619.com1.z0.glb.clouddn.com/2.jpg',
-				'http://7xl619.com1.z0.glb.clouddn.com/3.jpg',
-				'http://7xl619.com1.z0.glb.clouddn.com/4.jpg',
-				'http://7xl619.com1.z0.glb.clouddn.com/5.jpg',
-				'http://7xl619.com1.z0.glb.clouddn.com/6.jpg',
-				'http://7xl619.com1.z0.glb.clouddn.com/7.jpg',
-				'http://7xl619.com1.z0.glb.clouddn.com/9.jpg',
-				'http://7xl619.com1.z0.glb.clouddn.com/9.jpg',
-				'http://7xl619.com1.z0.glb.clouddn.com/10.jpg'
+			var myimgarr = ["http://7xl619.com1.z0.glb.clouddn.com/sHVcBqxIZ7cC_0.jpg",
+				"http://7xl619.com1.z0.glb.clouddn.com/sHVcBqxIZ7cC_1.jpg",
+				"http://7xl619.com1.z0.glb.clouddn.com/sHVcBqxIZ7cC_2.jpg",
+				"http://7xl619.com1.z0.glb.clouddn.com/sHVcBqxIZ7cC_3.jpg",
+				"http://7xl619.com1.z0.glb.clouddn.com/sHVcBqxIZ7cC_4.jpg",
+				"http://7xl619.com1.z0.glb.clouddn.com/sHVcBqxIZ7cC_5.jpg",
+				"http://7xl619.com1.z0.glb.clouddn.com/sHVcBqxIZ7cC_6.jpg",
+				"http://7xl619.com1.z0.glb.clouddn.com/sHVcBqxIZ7cC_7.jpg",
+				"http://7xl619.com1.z0.glb.clouddn.com/sHVcBqxIZ7cC_8.jpg",
+				"http://7xl619.com1.z0.glb.clouddn.com/sHVcBqxIZ7cC_9.jpg",
+				"http://7xl619.com1.z0.glb.clouddn.com/sHVcBqxIZ7cC_10.jpg",
+				"http://7xl619.com1.z0.glb.clouddn.com/sHVcBqxIZ7cC_11.jpg",
+				"http://7xl619.com1.z0.glb.clouddn.com/sHVcBqxIZ7cC_12.jpg",
+				"http://7xl619.com1.z0.glb.clouddn.com/sHVcBqxIZ7cC_13.jpg",
+				"http://7xl619.com1.z0.glb.clouddn.com/sHVcBqxIZ7cC_14.jpg",
+				"http://7xl619.com1.z0.glb.clouddn.com/sHVcBqxIZ7cC_15.jpg"
 			]
 			var imgarrshow = new imgArrShow(myimgarr)
 			imgarrshow.init()
-				//			var showmes = document.querySelector('#show_mes')
-				//			window.addEventListener("deviceorientation", function(e) {
-				//				e.gamma //横向翻转
-				//				var _gamma = Math.ceil(e.gamma)
-				//				showmes.innerText = _gamma
-				//			}, false);
 		</script>
 
 	</body>
