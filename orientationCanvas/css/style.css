@@ -24,6 +24,7 @@ html{font-size:10px}
 
 /*常用配置*/
 .wrap{ max-width: 640px; margin: auto;}
+.bk-grey{ background: #F6F6F6;}
 .clearfix:after {
 content: "."; 
 display: block; 
@@ -84,8 +85,9 @@ visibility: hidden;
 h1,h2,h3,h4,h5,h6{ font-weight: normal; }
 
 @font-face {font-family: "iconfont";
-  src: url('../fonts/confont.ttf?t=1463557970') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  src: url('../fonts/iconfont.ttf?t=146355770') format('truetype');/* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
 }
+
 .iconfont {
   font-family:"iconfont" !important;
   font-size:16px;
@@ -100,3 +102,37 @@ h1,h2,h3,h4,h5,h6{ font-weight: normal; }
 .canvas {background: #fdfdfd;cursor: ew-resize;}
 .loadingbox{  width: 100%;  height: 100%; top: 0px; left: 0px;  background: #fefefe;}
 .loadingbox img{ width: 20%; display: block; margin: 10rem  auto;}
+
+
+.detail-header{ padding:0.5rem; background: #FFFFFF; }
+.detail-header-mes .detail-header-mes-img  { width: 2.8rem; height:2.8rem ;  float: left; overflow: hidden; margin-right: 1rem;}
+.detail-header-mes { line-height:2.8rem; font-size: 1.2rem; float: left;}
+.detail-header-mes-time{ float: right; line-height: 2.8rem; color: #9f9f9f;}
+.detail-header-mes-time span{ font-weight: bold; font-size: 1rem;}
+ 
+ .detail-title { padding:0.5rem  0.5rem 0.7rem;background: #FFFFFF;}
+.detail-title h1{ font-size: 1.2rem; line-height: 2.2rem;}
+.detail-title p{ color: #9f9f9f;}
+.detail-title  p span{ font-size: 0.9rem; }
+
+.comments-list{ background: #FFFFFF;}
+.comments-number{  padding: 0.5rem; line-height: 1.6rem; font-size: 1.2rem; border-bottom: #E0E0E0 solid 1px; }
+.comments-list ul li { padding: 0.5rem 0rem; border-bottom: #E0E0E0 solid 1px;}
+.comments-list ul li .comments-head-img{ width: 3.0rem; height: 3.0rem;  overflow: hidden; margin: auto;}
+.comments-list ul li p {color: #414141; margin-top: 0.2rem;}
+.comments-header h3{ line-height: 1.2rem; color: #414141; font-size: 1.1rem;}
+.comments-header h3 span{ color: #9F9F9F;}
+.comments-header time{font-size: 0.8rem; color: #9f9f9f; line-height:0.8rem ;}
+
+
+
+
+ .fixed-footer{ background: url(../images/bk70.png); width: 100%; height: 4rem;  bottom: 0px;}
+.footer-box{ width: 96%; max-width: 615px; margin: auto; padding: 0.5rem 2%;}
+.footer-logo{ width: 3rem; height: 3rem; float: left; margin-right: 1rem;}
+.footer-box h3{ color: #5189ff; font-size: 1.2rem; line-height: 1.8rem; }
+.footer-box p { color: #FFFFFF; font-size: 0.9rem;}
+
+.down-btn{  right: 10px; top: 0.7rem;   background: #5189ff;  color: #FFFFFF; height: 2.6rem; overflow: hidden; padding: 0px 1rem; line-height: 2.6rem;border-radius: 4px; }
+
+
